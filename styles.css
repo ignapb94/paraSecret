@@ -1,0 +1,214 @@
+<style>
+
+body {margin:0;}
+
+.article {
+  margin: auto;
+  width: 90%;
+  padding: 0px;
+
+}
+
+.header {
+  width: 100%;
+  margin:0;
+  padding: 0px;
+  background-color: #73AD21;
+  position: fixed;
+  top: 0;
+  overflow: hidden;
+
+
+
+}
+
+.footer {
+  width: 100%;
+  margin:0;
+  padding: 0px;
+  background-color: #4d4d4d;
+  border: 3px solid #4d4d4d;
+  bottom: 0;
+  overflow: hidden;
+
+}
+
+.calculator {
+  margin: auto;
+  width: 90%;
+ border: 3px solid #DCDCDC;
+  background:#DCDCDC;
+  padding: 0px;
+  display: table 
+}
+
+.row {
+  margin: auto;
+  font-size:100%;
+  text-align: center; 
+  width: 80%;
+  line-height: 80%;
+ 
+}
+
+.rowForTitle {
+  font-size:200%;
+  text-align: center; 
+  width: 100%;
+  line-height: 120%;
+  display: inline-block;
+  vertical-align: bottom;
+  padding-top: 20px;
+  padding-bottom: 0px;
+
+  
+}
+
+.rowForText {
+  margin: auto;
+  font-size:150%;
+  text-align: center; 
+  width: 100%;
+  line-height: 120%;
+  display: inline-block;
+  vertical-align: bottom;
+  
+}
+
+.rowForInput {
+ margin: auto;
+  font-size:150%;
+  text-align: center; 
+  width: 40%;
+  line-height: 80%;
+  
+}
+
+.rowForFooterText {
+  margin: auto;
+  font-size:130%;
+  text-align: left; 
+  width: 100%;
+  line-height: 120%;
+  color:white;
+  padding: 10px;
+  display: inline-block;
+  vertical-align: bottom;
+  
+}
+
+.rowOutPut {
+  margin: auto;
+  font-size:100%;
+  text-align: center; 
+  width: 100%;
+  line-height: 120%;
+  display: inline-block;
+  vertical-align: bottom;
+  
+}
+
+
+.button {
+  margin: auto;
+  text-align: center;
+  text-decoration: none;
+  border: 3px solid #73AD21;
+  background:#73AD21;
+  padding: 10px;
+  cursor: pointer;
+  color: black;
+
+}
+
+.centerButton {
+  margin: auto;
+  <!--width: 30%;-->
+ 
+  
+}
+
+.center {
+  margin: auto;
+  width: 100%;
+  
+}
+
+.ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  background-color: #111; 
+  overflow: hidden;
+}
+
+.li {
+  float: left;
+}
+
+.lia {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.lihover {
+  background-color: #73AD21;
+}
+
+
+/* Fake image */
+.fakeimg {
+  background-color: #aaa;
+  width: 85%;
+  text-align: center;
+ /*  padding: 20px;*/
+}
+
+/* Paragraph */
+.para {
+  width: 100%;
+  text-align: center;
+  display: inline-block;
+  line-height: 1.5;
+
+
+
+}
+
+/* Add a card effect for articles */
+.card {
+  background-color: white;
+  padding: 20px;
+  text-align: center;
+   display: block;
+  margin-top: 20px;
+  margin-button: 20px;
+  line-height: normal;
+}
+
+/* Create two unequal columns that floats next to each other */
+/* Left column */
+.leftcolumn {
+  float: none;
+  width: 100%;
+  margin: auto;
+}
+
+
+
+
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+</style>
+
+
+
+

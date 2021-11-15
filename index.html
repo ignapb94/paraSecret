@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html>
+<head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Iberian Secret</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
+    <link href="styles.css" rel="stylesheet">
+</head>   
+<body>
+
+    <script type="text/javascript" >
+
+
+        function calcLen (stringLen,num,min) {
+            var freedomDegrees = num-min;
+            var lenRequired = 1;
+            for (i = 0; i<=freedomDegrees; i++){
+                lenRequired = lenRequired*(num-i)
+            }
+                var x = stringLen;
+
+                    
+                      do{x= x*33} 
+                      while (x<lenRequired);
+            
+            return x
+        }
+
+        function calcLenRequired (stringLen,num,min) {
+            var freedomDegrees = num-min;
+            var lenRequired = 1;
+            for (i = 0; i<=freedomDegrees; i++){
+                lenRequired = lenRequired*(num-i)
+            }
+           
+            return lenRequired
+        }
+
+        function displayInput () {
+                    var secretString = document.getElementById("SecretString").value;
+                    var numPeople = document.getElementById("NumPeople").value;
+                    var minConsensus = document.getElementById("MinConsensus").value;
+                    var repetitions = numPeople-minConsensus+1;
+                    var freedomDegrees = numPeople-minConsensus;
+                    console.log('freedomDegrees ', freedomDegrees)
+                    var incString='';
+                    var lenRequired = 1;
+                    var pointer = 0;
+                    var completed = 0;
+                    var result = '';
+                    var originalSecretLen= secretString.length;
+                    
+                    
+                    for (i = 0; i<=freedomDegrees; i++){
+                        lenRequired = lenRequired*(numPeople-i)
+                    }
+                   
+                    console.log('lenRequired ', lenRequired)
+
+                    var x = originalSecretLen;
+
+                    
+                      do{x= x*33} 
+                      while (x<lenRequired);
+
+
+                    
+
+                 
+                    var iterations = x/33;
+
+                    console.log('iterations '+iterations)
+
+                    
+
+                
+                
+                    
+
+
+                    for (var counter=0;counter<iterations;counter++){
+                        
+                                var encryptedResult = CryptoJS.AES.encrypt(secretString.substr(pointer,1), pointer.toString(),{
+                                
+                                    mode: CryptoJS.mode.CBC,
+                                    padding: CryptoJS.pad.ZeroPadding
+                                }).toString().substr(10,33);
+                                
+
+                                console.log('Encrypted ' + encryptedResult+' pointer '+pointer.toString()+' to encrypt ' + secretString.substr(pointer,1));
+
+                                incString=incString+encryptedResult;
+                                pointer = pointer +1;
+                                
+                                
+                                if((pointer)>secretString.length){
+                                    secretString= incString;
+                                    incString='';
+                                    pointer = 0;
+                                    counter = -1;
+                                   
+                                }
+
+
+                    }
+                
+                    if(x- incString.length>0){
+                        console.log('nos hemos pasado')
+                    } else {
+                        console.log('Original size ' + originalSecretLen + ' incStringLeng  '+ incString.length+' number of iterations '+ iterations +' incString ' + incString);
+
+                    }
+
+
+                    split(incString,numPeople,freedomDegrees)
+        }
+
+
+function decryptHigh () {
+
+var incStringRHigh = document.getElementById("ToDecrypt").value;
+var orLenHigh = document.getElementById("OrigLen").value;
+
+console.log('incStringRHigh'+incStringRHigh)
+console.log('orLenHigh'+ orLenHigh)
+
+decrypt(incStringRHigh,orLenHigh)
+
+}
+
+function decrypt(incStringR,orLen) {
+
+
+    console.log('incStringR '+incStringR)
+    console.log('orLen '+ orLen)
+
+var incStringR = incStringR;
+
+
+var pointerR=0;
+var decStringPart='';
+var decString='';
+
+var iR=incStringR.length / 33;
+
+
+
+for(r=0;r<(incStringR.length / 33);r++){
+   
+    pointerR = -(33*(r+1));
+    var keyToDecrypt = (incStringR.length +pointerR)/33
+
+    if(Math.floor(keyToDecrypt)!=keyToDecrypt){
+        r=incStringR.length / 33
+        console.log('parado porque hay algo raro')
+    }
+
+    console.log('pointerR ' + pointerR);
+    console.log('keyToDecrypt ' + keyToDecrypt);
+    ToDecrypt = incStringR.substr(pointerR,33);
+
+    //console.log('ToDecrypt ' + ToDecrypt);
+    FullToDecrypt = 'U2FsdGVkX1' + ToDecrypt + '=';
+
+    var decrypted = CryptoJS.AES.decrypt(FullToDecrypt, keyToDecrypt.toString(),{
+                            
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.ZeroPadding
+       });
+
+    decStringPart=hex_to_ascii(decrypted);
+    console.log('ToDecrypt ' + ToDecrypt+' keyToDecrypt '+keyToDecrypt+' decStringPart ' + decStringPart);
+    decString= decStringPart + decString;
+    
+    if(pointerR*(-1)==incStringR.length){
+
+        //aqui hay que hacer algo para que actúe, pero después ya no más
+        incStringR=decString;
+        if(r==iR-1){
+        decString=decString}else{
+            decString='';
+        }
+
+    }
+
+
+}
+
+console.log('decString ' + decString);
+
+
+if(incStringR.length>orLen){
+    console.log('do it again!! ' + decString);
+    decrypt(decString,orLen)
+
+}
+document.getElementById("para").innerHTML =decString;
+}
+
+
+
+
+
+
+function hex_to_ascii(str) {
+	var hex  = str.toString();
+	var str = '';
+	for (var n = 0; n < hex.length; n += 2) {
+		str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
+	}
+	return str;
+ }
+
+
+function splitHigh(){
+    var incstring=document.getElementById("SecretString").value
+    var numPeople = document.getElementById("NumPeople").value;
+    var minConsensus = document.getElementById("MinConsensus").value;
+    var freedomDegrees = numPeople-minConsensus;
+    
+    split(incstring,numPeople,freedomDegrees)
+}
+
+ function split(_incString,_pers,_freedomDegrees){
+     
+    
+
+
+    var stringToInclude=''
+    
+    var joinedString=''
+    var individualString =''
+    var incstrinLen = _incString.length
+    var lenRequired=1
+
+
+
+    for (i = 0; i<=_freedomDegrees; i++){
+        lenRequired = lenRequired*(_pers-i)
+    }
+    console.log('_incStringLen '+ incstrinLen)
+    console.log('lenRequired '+ lenRequired)
+    
+    console.log('lenRequiredMod '+ lenRequired)
+
+    var stringAugmented = _incString.substr(0,lenRequired)+ _incString.substr(0,lenRequired)
+    var first
+    var pointer
+    var output=''
+
+    
+
+
+
+
+    var basicLen=Math.floor(lenRequired/_pers)
+    var basicLenLocal =0
+    console.log('BasicLen '+ basicLen)
+
+    var remainder= incstrinLen-lenRequired
+    var remainderString=_incString.substr(-remainder,remainder)
+    console.log('remainderString '+ remainderString)
+
+
+    for(p=0;p<_pers;p++){
+        individualString = createBlankString(incstrinLen)
+        pointer = p*basicLen
+        stringToInclude = stringAugmented.substr(pointer,basicLen)
+        //individualString=individualString+','+stringToInclude+','+(pointer).toString()+'P'
+        basicLenLocal=basicLen
+        individualString=updateString(individualString,stringToInclude,pointer,incstrinLen,basicLen)
+        for(f=1;f<=_freedomDegrees;f++){
+//revisar si es necesario tener local y new diferentes
+            
+            basicLenNew=basicLenLocal/(_pers-(f))
+
+            first =basicLenNew*p
+
+            console.log('basicLenLocal '+basicLenLocal)
+            console.log('basicLenNew '+basicLenNew)
+            for(pr=0;pr<(lenRequired/basicLenLocal);pr++){
+                //revisar aquí cuandas veces se tiene que multiplicar el pers, porque creo que tendría que hacerse hasta acabar
+                pointer=first+(pr*basicLenLocal)
+                if(pointer>=lenRequired){
+                    stringToInclude = stringAugmented.substr(pointer,basicLenNew)
+                    individualString=updateString(individualString,stringToInclude,pointer-lenRequired,incstrinLen,basicLenNew)
+                
+                    
+                }else{
+
+                    if(pointer+basicLenNew>=lenRequired){
+                        //meter opción para cuando el pointer es mayor que basicLen
+                    stringToInclude = stringAugmented.substr(pointer,lenRequired-pointer)
+                    individualString=updateString(individualString,stringToInclude,pointer,incstrinLen,lenRequired-pointer)
+                    
+                    
+                    stringToInclude = stringAugmented.substr(lenRequired,basicLenNew-(lenRequired-pointer))
+                    individualString=updateString(individualString,stringToInclude,0,incstrinLen,basicLenNew-(lenRequired-pointer))
+                    }else{
+                    stringToInclude = stringAugmented.substr(pointer,basicLenNew)
+                    individualString=updateString(individualString,stringToInclude,pointer,incstrinLen,basicLenNew)
+                }
+                //individualString=individualString+','+stringToInclude+','+(pointer).toString()+'P'
+                
+            }}
+            basicLenLocal=basicLenNew
+
+        }
+        //individualString=individualString+','+_incString.substr(-remainder,remainder)+','+(_incString.length-remainder)+'P'
+        individualString=updateString(individualString,remainderString,incstrinLen-remainder,incstrinLen,remainder)
+        joinedString=joinedString+individualString
+        output=output+individualString + '<br>';
+        
+        console.log('individualStrin '+p+' es '+individualString)
+        basicLen=Math.floor(lenRequired/_pers)
+        individualString = '';
+    }
+    //join(joinedString)
+    document.getElementById("para2").innerHTML =output;
+    console.log('outPut '+output)
+
+
+
+
+ }
+ function createBlankString(totalLen){
+     var blankString=''
+     for (i=0;i<totalLen;i++){
+        blankString=blankString+','
+
+     }
+     return blankString;
+ }
+
+ function updateString(stringToUpdate,stringToIntroduce,whereTo, totalLen,partialLen){
+     
+     var newString = stringToUpdate.substr(0,whereTo)+stringToIntroduce+stringToUpdate.substr(whereTo+partialLen,totalLen-(whereTo+partialLen))
+return newString;
+ }
+
+
+ function clean(incString){
+     var resultingstring=incString
+     var symbol
+     var incstrinLen = incString.length
+    for (i=0;i<incstrinLen;i++){
+        symbol=incString.substr(i,1)
+        if(symbol==' '){
+            resultingstring=incString.substr(0,i)+ resultingstring + incString.substr(i+1,incstrinLen-(i+1))
+        }
+        
+    }
+    return resultingstring
+    //el problema está aquí, no se están quitando los espacios del <br>
+    
+}
+
+ function join(){
+    
+    var stringToJoin = document.getElementById("SecretString").value;
+
+    stringToJoin = clean(stringToJoin)
+    console.log('stringToJoin ' + stringToJoin)
+    
+
+    var orLen = document.getElementById("OrigLen").value;
+    
+    
+   
+  
+     
+     var resultingString =''
+     
+     
+     var to =0
+     var numP = document.getElementById("NumPeople").value;
+     var minC = document.getElementById("MinConsensus").value;
+     
+     var lenTotal = calcLen(orLen,numP,minC)
+     var cycles = stringToJoin.length/lenTotal
+     console.log('len ',lenTotal)
+
+     for(i=0;i<lenTotal;i++){
+         for(o=0;o<cycles;o++){
+             to = i+(lenTotal*o)
+         if( stringToJoin.substr(to,1)==','){
+            
+            if(o==cycles-1){
+                resultingString=resultingString + ','
+            }
+         }else{
+            resultingString=resultingString.substr(0,to)+ stringToJoin.substr(to,1)
+            
+            
+            o=cycles
+         }
+       
+        }
+     }
+
+     
+
+
+     console.log('resultingString '+resultingString)
+        decrypt(resultingString,orLen)
+    }
+  
+
+
+
+
+            
+        
+
+            
+        
+        </script>
+
+    <div class="center">
+        <div class="rowForText"><h4>String to split</h4></div>
+        <div class="rowForInput"><input   class="row"  id="SecretString" type="string"/></div><br>
+       </div>
+
+       <div class="center">
+        <div class="rowForText"><h4>Number of people</h4></div>
+        <div class="rowForInput"><input   class="row"  id="NumPeople" type="number"/></div><br>
+       </div>
+
+       <div class="center">
+        <div class="rowForText"><h4>Consensus minimum</h4></div>
+        <div class="rowForInput"><input   class="row"  id="MinConsensus" type="number"/></div><br>
+       </div>
+
+       <div class="row">
+        <div class="centerButton">
+        <h4><a onclick="displayInput()" class="button">Split Secret</a></h4>
+        </div>
+        </div>
+
+        <div class="center">
+            <div class="rowForText"><h4>Original Len</h4></div>
+            <div class="rowForInput"><input   class="row"  id="OrigLen" type="string"/></div><br>
+            </div>
+
+        <div class="row">
+            <div class="centerButton">
+            <h4><a onclick="join()" class="button">Decrypt</a></h4>
+            </div>
+            </div>
+
+        <div>
+            <div class="rowOutPut"><p id="para2"/><p>
+            </div>
+
+        <div class="center">
+            <div class="rowForText"><h4>To Decrypt</h4></div>
+            <div class="rowForInput"><input   class="row"  id="ToDecrypt" type="string"/></div><br>
+           </div>
+
+
+
+
+        <div class="row">
+            <div class="centerButton">
+            <h4><a onclick="splitHigh()" class="button">Split</a></h4>
+            </div>
+            </div>
+    </div>
+  
+    <br>
+  
+    <div>
+     <div class="rowForText"><p id="para"/><p>
+     </div>
+     </div>
+</body> 
